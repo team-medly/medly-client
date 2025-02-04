@@ -187,6 +187,25 @@ const PatientInfo = styled.Text`
   font-weight: 300;
 `;
 
+const FloatingButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #7b6ef6;
+  border-radius: 30px;
+  align-items: center;
+  justify-content: center;
+
+  shadow-color: rgba(0, 0, 0, 0.4);
+  shadow-offset: 0px 6px;
+  shadow-opacity: 0.3;
+  shadow-radius: 8px;
+
+  elevation: 10;
+`;
+
 const renderPatientItem = ({
   item,
 }: {
@@ -234,6 +253,9 @@ export default function HomePresenter({ isLoaded }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={renderPatientItem}
       />
+      <FloatingButton onPress={() => console.log("채팅 버튼 클릭됨!")}>
+        <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />
+      </FloatingButton>
     </SafeContainer>
   ) : (
     <Loader />
