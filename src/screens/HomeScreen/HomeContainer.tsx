@@ -9,11 +9,15 @@ import { AppDispatch } from "../../store/store";
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
 
-export default function HomeContainer({}: Props) {
+export default function HomeContainer({ navigation }: Props) {
   const dispatch: AppDispatch = useDispatch();
 
   const preloadHome = () => {
     // dispatch(getUserLogsByPatientId({ patientId: 12345 }));
+  };
+
+  const navigateToChatScreen = () => {
+    navigation.navigate("Chat");
   };
 
   useEffect(() => {
@@ -22,5 +26,10 @@ export default function HomeContainer({}: Props) {
     return () => {};
   }, [preloadHome, dispatch]);
 
-  return <HomePresenter isLoaded={true} />;
+  return (
+    <HomePresenter
+      isLoaded={true}
+      navigateToChatScreen={navigateToChatScreen}
+    />
+  );
 }
