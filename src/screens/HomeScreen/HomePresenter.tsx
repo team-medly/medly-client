@@ -236,9 +236,13 @@ const renderPatientItem = ({
 
 interface Props {
   isLoaded: boolean;
+  navigateToChatScreen: () => void;
 }
 
-export default function HomePresenter({ isLoaded }: Props) {
+export default function HomePresenter({
+  isLoaded,
+  navigateToChatScreen,
+}: Props) {
   return isLoaded ? (
     <SafeContainer>
       <Header>
@@ -253,7 +257,7 @@ export default function HomePresenter({ isLoaded }: Props) {
         keyExtractor={(item) => item.id}
         renderItem={renderPatientItem}
       />
-      <FloatingButton onPress={() => console.log("채팅 버튼 클릭됨!")}>
+      <FloatingButton onPress={navigateToChatScreen}>
         <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />
       </FloatingButton>
     </SafeContainer>
