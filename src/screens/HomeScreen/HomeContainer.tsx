@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import HomePresenter from "./HomePresenter";
 import { RootStackParamList } from "../../types/types";
 import { AppDispatch } from "../../store/store";
-import { getUserLogsByPatientId } from "../../store/root/rootActions";
+// import { getUserLogsByPatientId } from "../../store/root/rootActions";
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
 
@@ -13,7 +13,7 @@ export default function HomeContainer({}: Props) {
   const dispatch: AppDispatch = useDispatch();
 
   const preloadHome = () => {
-    dispatch(getUserLogsByPatientId({ patientId: 12345 }));
+    // dispatch(getUserLogsByPatientId({ patientId: 12345 }));
   };
 
   useEffect(() => {
