@@ -13,7 +13,7 @@ export default function MainDrawerNav() {
         swipeEnabled: false,
       }}
     >
-      {true ? (
+      {false ? (
         <Drawer.Screen name="MainStack" component={MainStackNav} />
       ) : (
         <Drawer.Screen name="EntryStack" component={EntryStackNav} />
