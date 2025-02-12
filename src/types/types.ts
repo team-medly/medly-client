@@ -14,3 +14,20 @@ export type Message = {
   text: string;
   type: "sent" | "received";
 };
+
+export type Doctor = {
+  idx: number;
+  role: string;
+  email: string;
+  name: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: "male" | "female";
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+};
+
+export type Patient = {
+  idx: number;
+};

@@ -12,6 +12,7 @@ import {
 } from "redux-persist";
 
 import rootReducer from "./root/rootReducer";
+import signInReducer from "./signIn/signInReducer";
 import chatReducer from "./chat/chatReducer";
 
 const persistConfig = {
@@ -25,6 +26,7 @@ const persistedRootReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: {
     root: persistedRootReducer,
+    signIn: signInReducer,
     chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>

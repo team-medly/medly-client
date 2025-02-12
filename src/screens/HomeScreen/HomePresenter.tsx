@@ -126,6 +126,8 @@ const Header = styled.View`
   align-items: center;
 `;
 
+const HeaderBtn = styled.TouchableOpacity``;
+
 const Title = styled.Text`
   font-size: 26px;
   font-weight: bold;
@@ -237,16 +239,20 @@ const renderPatientItem = ({
 interface Props {
   isLoaded: boolean;
   navigateToChatScreen: () => void;
+  actLogout: () => void;
 }
 
 export default function HomePresenter({
   isLoaded,
   navigateToChatScreen,
+  actLogout,
 }: Props) {
   return isLoaded ? (
     <SafeContainer>
       <Header>
-        <Title>Patients</Title>
+        <HeaderBtn onPress={actLogout}>
+          <Title>Patients</Title>
+        </HeaderBtn>
       </Header>
       <SearchContainer>
         <Ionicons name="search" size={20} color="#aaa" />
