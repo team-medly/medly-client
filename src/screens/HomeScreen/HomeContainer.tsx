@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import HomePresenter from "./HomePresenter";
 import { RootStackParamList } from "../../types/types";
 import { AppDispatch } from "../../store/store";
+import { logout } from "../../store/root/rootReducer";
 // import { getUserLogsByPatientId } from "../../store/root/rootActions";
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
@@ -20,6 +21,10 @@ export default function HomeContainer({ navigation }: Props) {
     navigation.navigate("Chat");
   };
 
+  const actLogout = () => {
+    dispatch(logout());
+  };
+
   useEffect(() => {
     preloadHome();
 
@@ -30,6 +35,7 @@ export default function HomeContainer({ navigation }: Props) {
     <HomePresenter
       isLoaded={true}
       navigateToChatScreen={navigateToChatScreen}
+      actLogout={actLogout}
     />
   );
 }
