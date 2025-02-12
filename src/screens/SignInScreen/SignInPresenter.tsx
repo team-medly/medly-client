@@ -5,9 +5,9 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import styled from "styled-components/native";
-import Loader from "../../components/Common/Loader";
 
 const SafeContainer = styled.SafeAreaView`
   flex: 1;
@@ -68,11 +68,23 @@ const LinkText = styled.Text`
 `;
 
 interface Props {
-  isLoaded: boolean;
+  phoneNumber: string;
+  password: string;
+  isLoginBtnLoading: boolean;
+  setPhoneNumber: (text: string) => void;
+  setPassword: (text: string) => void;
+  clickLoginBtn: () => void;
 }
 
-export default function SignInScreen({ isLoaded }: Props) {
-  return isLoaded ? (
+export default function SignInScreen({
+  phoneNumber,
+  password,
+  isLoginBtnLoading,
+  setPhoneNumber,
+  setPassword,
+  clickLoginBtn,
+}: Props) {
+  return (
     <SafeContainer>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -81,10 +93,25 @@ export default function SignInScreen({ isLoaded }: Props) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ContentContainer>
             <Title>Listen back{"\n"}Heal better</Title>
-            <Input placeholder="Patient ID or Phone Number" />
-            <Input placeholder="Password" secureTextEntry />
-            <LoginButton>
-              <ButtonText>Login</ButtonText>
+            <Input
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChangeText={(text: string) => setPhoneNumber(text)}
+            />
+            <Input
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={(text: string) => setPassword(text)}
+            />
+            <LoginButton onPress={clickLoginBtn} disabled={isLoginBtnLoading}>
+              <ButtonText>
+                {isLoginBtnLoading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  "Login"
+                )}
+              </ButtonText>
             </LoginButton>
             <LinksContainer>
               <LinkText>Privacy Policy</LinkText>
@@ -95,7 +122,5 @@ export default function SignInScreen({ isLoaded }: Props) {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeContainer>
-  ) : (
-    <Loader />
   );
 }
