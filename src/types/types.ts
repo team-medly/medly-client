@@ -31,3 +31,11 @@ export type Doctor = {
 export type Patient = {
   idx: number;
 };
+
+export type PatientRecord = {
+  patientId: string;
+  name: string;
+  dateOfBirth: Date;
+  scheduledAt: Date;
+  status: boolean;
+};

@@ -13,6 +13,7 @@ import {
 
 import rootReducer from "./root/rootReducer";
 import signInReducer from "./signIn/signInReducer";
+import homeReducer from "./home/homeReducer";
 import chatReducer from "./chat/chatReducer";
 
 const persistConfig = {
@@ -27,6 +28,7 @@ export const store = configureStore({
   reducer: {
     root: persistedRootReducer,
     signIn: signInReducer,
+    home: homeReducer,
     chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -4,114 +4,7 @@ import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Loader from "../../components/Common/Loader";
-
-const patients = [
-  {
-    id: "00001",
-    name: "안의진",
-    status: "설명 필요",
-    birthDate: "1990-01-01",
-    scheduledDate: "2023-10-01",
-  },
-  {
-    id: "00002",
-    name: "정지현",
-    status: "설명 필요",
-    birthDate: "1985-02-15",
-    scheduledDate: "2023-10-02",
-  },
-  {
-    id: "00003",
-    name: "김재빈",
-    status: "설명 완료",
-    birthDate: "1992-03-20",
-    scheduledDate: "2023-10-03",
-  },
-  {
-    id: "00004",
-    name: "선우진성",
-    status: "설명 완료",
-    birthDate: "1988-04-25",
-    scheduledDate: "2023-10-04",
-  },
-  {
-    id: "00005",
-    name: "현수민",
-    status: "설명 필요",
-    birthDate: "1995-05-30",
-    scheduledDate: "2023-10-05",
-  },
-  {
-    id: "00006",
-    name: "박지훈",
-    status: "설명 필요",
-    birthDate: "1991-06-10",
-    scheduledDate: "2023-10-06",
-  },
-  {
-    id: "00007",
-    name: "이서준",
-    status: "설명 완료",
-    birthDate: "1987-07-15",
-    scheduledDate: "2023-10-07",
-  },
-  {
-    id: "00008",
-    name: "최민준",
-    status: "설명 필요",
-    birthDate: "1993-08-20",
-    scheduledDate: "2023-10-08",
-  },
-  {
-    id: "00009",
-    name: "김하늘",
-    status: "설명 완료",
-    birthDate: "1989-09-25",
-    scheduledDate: "2023-10-09",
-  },
-  {
-    id: "00010",
-    name: "오지호",
-    status: "설명 필요",
-    birthDate: "1994-10-30",
-    scheduledDate: "2023-10-10",
-  },
-  {
-    id: "00011",
-    name: "장민서",
-    status: "설명 완료",
-    birthDate: "1990-11-05",
-    scheduledDate: "2023-10-11",
-  },
-  {
-    id: "00012",
-    name: "윤지우",
-    status: "설명 필요",
-    birthDate: "1986-12-10",
-    scheduledDate: "2023-10-12",
-  },
-  {
-    id: "00013",
-    name: "서윤아",
-    status: "설명 완료",
-    birthDate: "1992-01-15",
-    scheduledDate: "2023-10-13",
-  },
-  {
-    id: "00014",
-    name: "한지민",
-    status: "설명 필요",
-    birthDate: "1988-02-20",
-    scheduledDate: "2023-10-14",
-  },
-  {
-    id: "00015",
-    name: "이도현",
-    status: "설명 완료",
-    birthDate: "1995-03-25",
-    scheduledDate: "2023-10-15",
-  },
-];
+import { PatientRecord } from "../../types/types";
 
 const SafeContainer = styled.SafeAreaView`
   flex: 1;
@@ -208,42 +101,38 @@ const FloatingButton = styled.TouchableOpacity`
   elevation: 10;
 `;
 
-const renderPatientItem = ({
-  item,
-}: {
-  item: {
-    id: string;
-    name: string;
-    status: string;
-    birthDate: string;
-    scheduledDate: string;
-  };
-}) => (
+const renderPatientItem = ({ item }: { item: PatientRecord }) => (
   <PatientItem>
     <PatientItemUpperView>
       <PatientName>{item.name}</PatientName>
-      <StatusButton completed={item.status === "설명 완료"} disabled={true}>
-        <StatusText completed={item.status === "설명 완료"}>
-          {item.status}
+      <StatusButton completed={item.status} disabled={true}>
+        <StatusText completed={item.status}>
+          {item.status ? "설명 완료" : "설명 필요"}
         </StatusText>
       </StatusButton>
     </PatientItemUpperView>
     <PatientItemBelowView>
-      <PatientInfo>{`ID: ${item.id}`}</PatientInfo>
-      <PatientInfo>{`Birth Date: ${item.birthDate}`}</PatientInfo>
-      <PatientInfo>{`Scheduled: ${item.scheduledDate}`}</PatientInfo>
+      <PatientInfo>{`ID: ${item.patientId}`}</PatientInfo>
+      <PatientInfo>{`Birth Date: ${new Date(
+        item.dateOfBirth
+      ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+      <PatientInfo>{`Scheduled: ${new Date(item.scheduledAt).toLocaleDateString(
+        "ko-KR"
+      )}`}</PatientInfo>
     </PatientItemBelowView>
   </PatientItem>
 );
 
 interface Props {
   isLoaded: boolean;
+  patients: PatientRecord[];
   navigateToChatScreen: () => void;
   actLogout: () => void;
 }
 
 export default function HomePresenter({
   isLoaded,
+  patients,
   navigateToChatScreen,
   actLogout,
 }: Props) {
@@ -260,7 +149,7 @@ export default function HomePresenter({
       </SearchContainer>
       <FlatList
         data={patients}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.patientId}
         renderItem={renderPatientItem}
       />
       <FloatingButton onPress={navigateToChatScreen}>

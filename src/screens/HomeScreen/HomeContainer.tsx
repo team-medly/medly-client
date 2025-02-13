@@ -1,20 +1,25 @@
 import React, { useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import HomePresenter from "./HomePresenter";
 import { RootStackParamList } from "../../types/types";
-import { AppDispatch } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { logout } from "../../store/root/rootReducer";
-// import { getUserLogsByPatientId } from "../../store/root/rootActions";
+import { getPatientList } from "../../store/home/homeActions";
+import { resetHome } from "../../store/home/homeReducer";
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
 
 export default function HomeContainer({ navigation }: Props) {
+  const { accessToken } = useSelector((state: RootState) => state.root);
+
+  const { isLoaded, patients } = useSelector((state: RootState) => state.home);
+
   const dispatch: AppDispatch = useDispatch();
 
   const preloadHome = () => {
-    // dispatch(getUserLogsByPatientId({ patientId: 12345 }));
+    dispatch(getPatientList({ accessToken }));
   };
 
   const navigateToChatScreen = () => {
@@ -28,12 +33,15 @@ export default function HomeContainer({ navigation }: Props) {
   useEffect(() => {
     preloadHome();
 
-    return () => {};
-  }, [preloadHome, dispatch]);
+    return () => {
+      dispatch(resetHome());
+    };
+  }, [dispatch]);
 
   return (
     <HomePresenter
-      isLoaded={true}
+      isLoaded={isLoaded}
+      patients={patients}
       navigateToChatScreen={navigateToChatScreen}
       actLogout={actLogout}
     />
