@@ -1,6 +1,8 @@
 export type RootStackParamList = {
   MainBottom: undefined;
   Home: undefined;
+  Document: undefined;
+  Recorder: undefined;
   Chat: undefined;
 };
 

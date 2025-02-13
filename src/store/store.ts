@@ -15,6 +15,7 @@ import rootReducer from "./root/rootReducer";
 import signInReducer from "./signIn/signInReducer";
 import homeReducer from "./home/homeReducer";
 import chatReducer from "./chat/chatReducer";
+import documentReducer from "./document/documentReducer";
 
 const persistConfig = {
   key: "rootKey",
@@ -30,6 +31,7 @@ export const store = configureStore({
     signIn: signInReducer,
     home: homeReducer,
     chat: chatReducer,
+    document: documentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
