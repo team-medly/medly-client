@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -101,33 +101,12 @@ const FloatingButton = styled.TouchableOpacity`
   elevation: 10;
 `;
 
-const renderPatientItem = ({ item }: { item: PatientRecord }) => (
-  <PatientItem>
-    <PatientItemUpperView>
-      <PatientName>{item.name}</PatientName>
-      <StatusButton completed={item.status} disabled={true}>
-        <StatusText completed={item.status}>
-          {item.status ? "설명 완료" : "설명 필요"}
-        </StatusText>
-      </StatusButton>
-    </PatientItemUpperView>
-    <PatientItemBelowView>
-      <PatientInfo>{`ID: ${item.patientId}`}</PatientInfo>
-      <PatientInfo>{`Birth Date: ${new Date(
-        item.dateOfBirth
-      ).toLocaleDateString("ko-KR")}`}</PatientInfo>
-      <PatientInfo>{`Scheduled: ${new Date(item.scheduledAt).toLocaleDateString(
-        "ko-KR"
-      )}`}</PatientInfo>
-    </PatientItemBelowView>
-  </PatientItem>
-);
-
 interface Props {
   isLoaded: boolean;
   patients: PatientRecord[];
   navigateToChatScreen: () => void;
   actLogout: () => void;
+  navigateToRecorderScreen: (idx: number) => void;
 }
 
 export default function HomePresenter({
@@ -135,7 +114,34 @@ export default function HomePresenter({
   patients,
   navigateToChatScreen,
   actLogout,
+  navigateToRecorderScreen,
 }: Props) {
+  const renderPatientItem = ({ item }: { item: PatientRecord }) => (
+    <TouchableWithoutFeedback
+      onPress={() => navigateToRecorderScreen(item.idx)}
+    >
+      <PatientItem>
+        <PatientItemUpperView>
+          <PatientName>{item.name}</PatientName>
+          <StatusButton completed={item.status} disabled={true}>
+            <StatusText completed={item.status}>
+              {item.status ? "설명 완료" : "설명 필요"}
+            </StatusText>
+          </StatusButton>
+        </PatientItemUpperView>
+        <PatientItemBelowView>
+          <PatientInfo>{`ID: ${item.patientId}`}</PatientInfo>
+          <PatientInfo>{`Birth Date: ${new Date(
+            item.dateOfBirth
+          ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+          <PatientInfo>{`Scheduled: ${new Date(
+            item.scheduledAt
+          ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+        </PatientItemBelowView>
+      </PatientItem>
+    </TouchableWithoutFeedback>
+  );
+
   return isLoaded ? (
     <SafeContainer>
       <Header>
@@ -149,7 +155,7 @@ export default function HomePresenter({
       </SearchContainer>
       <FlatList
         data={patients}
-        keyExtractor={(item) => item.patientId}
+        keyExtractor={(item) => item.idx.toString()}
         renderItem={renderPatientItem}
       />
       <FloatingButton onPress={navigateToChatScreen}>

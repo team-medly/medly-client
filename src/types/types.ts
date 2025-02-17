@@ -2,7 +2,7 @@ export type RootStackParamList = {
   MainBottom: undefined;
   Home: undefined;
   Document: undefined;
-  Recorder: undefined;
+  Recorder: { idx: number };
   Chat: undefined;
 };
 
@@ -35,6 +35,7 @@ export type Patient = {
 };
 
 export type PatientRecord = {
+  idx: number;
   patientId: string;
   name: string;
   dateOfBirth: Date;

@@ -30,6 +30,10 @@ export default function HomeContainer({ navigation }: Props) {
     dispatch(logout());
   };
 
+  const navigateToRecorderScreen = (idx: number) => {
+    navigation.navigate("Recorder", { idx });
+  };
+
   useEffect(() => {
     preloadHome();
 
@@ -44,6 +48,7 @@ export default function HomeContainer({ navigation }: Props) {
       patients={patients}
       navigateToChatScreen={navigateToChatScreen}
       actLogout={actLogout}
+      navigateToRecorderScreen={navigateToRecorderScreen}
     />
   );
 }

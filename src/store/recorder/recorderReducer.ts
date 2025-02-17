@@ -5,7 +5,7 @@ export interface RecorderState {
 }
 
 const initialState: RecorderState = {
-  isLoaded: false,
+  isLoaded: true,
 };
 
 export const recorderSlice = createSlice({
@@ -13,7 +13,7 @@ export const recorderSlice = createSlice({
   initialState,
   reducers: {
     resetRecorder: (state) => {
-      state.isLoaded = false;
+      state.isLoaded = true;
     },
     setIsLoaded: (state, action: PayloadAction<boolean>) => {
       state.isLoaded = action.payload;

@@ -5,6 +5,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { getUserLogsByPatientId, login } from "./rootActions";
 import { AppState, Screens } from "../../constants/Enums";
 import { Doctor, Patient } from "../../types/types";
+import { getPatientList } from "../home/homeActions";
 
 export interface RootState {
   appState: AppStateStatus;
@@ -57,6 +58,13 @@ export const rootSlice = createSlice({
     });
     builder.addCase(getUserLogsByPatientId.rejected, (_, action) => {
       console.error("getUserLogsByPatientId.rejected", action);
+    });
+    builder.addCase(getPatientList.rejected, (state, action) => {
+      console.error("getPatientList(root).rejected", action);
+
+      state.accessToken = "";
+      state.doctor = undefined;
+      state.patient = undefined;
     });
   },
 });
