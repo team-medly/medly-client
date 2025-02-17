@@ -11,10 +11,13 @@ const SafeContainer = styled.SafeAreaView`
 `;
 const BackButton = styled.TouchableOpacity``;
 
+const SaveButton = styled.TouchableOpacity``;
+
 const Header = styled.View`
   flex-direction: row;
   padding: 10px;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const TitleContainer = styled.View`
@@ -87,16 +90,40 @@ const FloatingButton = styled.TouchableOpacity`
 `;
 interface Props {
   isLoaded: boolean;
+  recording: any;
+  recordingUri: any;
+  isPlaying: boolean;
   goBack: () => void;
+  startRecording: () => void;
+  stopRecording: () => void;
+  playSound: (uri: string) => void;
+  pauseSound: () => void;
+  saveAudioFileToServer: () => void;
 }
 
-export default function RecordingConsentScreen({ isLoaded, goBack }: Props) {
+export default function RecordingConsentScreen({
+  isLoaded,
+  recording,
+  recordingUri,
+  isPlaying,
+  goBack,
+  startRecording,
+  stopRecording,
+  playSound,
+  pauseSound,
+  saveAudioFileToServer,
+}: Props) {
   return isLoaded ? (
     <SafeContainer>
       <Header>
         <BackButton onPress={goBack}>
           <Ionicons name="chevron-back" size={24} color="#000" />
         </BackButton>
+        {recordingUri && (
+          <SaveButton onPress={saveAudioFileToServer}>
+            <Ionicons name="save" size={24} color="#000" />
+          </SaveButton>
+        )}
       </Header>
       <ScrollView>
         <TitleContainer>
@@ -114,9 +141,24 @@ export default function RecordingConsentScreen({ isLoaded, goBack }: Props) {
           <Description>아직 설명이 녹음되지 않았습니다.</Description>
         </SummaryContainer>
       </ScrollView>
-      <FloatingButton>
-        <Ionicons name="mic" size={28} color="#fff" />
-      </FloatingButton>
+
+      {!recordingUri && (
+        <FloatingButton onPress={recording ? stopRecording : startRecording}>
+          <Ionicons name={recording ? "stop" : "mic"} size={28} color="#fff" />
+        </FloatingButton>
+      )}
+
+      {recordingUri && (
+        <FloatingButton
+          onPress={isPlaying ? pauseSound : () => playSound(recordingUri)}
+        >
+          <Ionicons
+            name={isPlaying ? "pause" : "play"}
+            size={28}
+            color="#fff"
+          />
+        </FloatingButton>
+      )}
     </SafeContainer>
   ) : (
     <Loader />
