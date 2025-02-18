@@ -72,8 +72,18 @@ export default function ChatContainer({ navigation, route }: Props) {
     }
   };
 
+  const actGetChatList = async () => {
+    if (doctor) {
+      await dispatch(getChatList({ accessToken, doctorIdx: doctor.idx }));
+
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  };
+
   useEffect(() => {
-    doctor && dispatch(getChatList({ accessToken, doctorIdx: doctor.idx }));
+    actGetChatList();
 
     return () => {
       dispatch(resetChat());

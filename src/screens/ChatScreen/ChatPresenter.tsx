@@ -120,6 +120,7 @@ const ChatScreen = ({
               <MessageText type={item.type}>{item.text}</MessageText>
             </MessageBubble>
           )}
+          initialNumToRender={messages.length}
         />
         <InputContainer>
           <MessageInput

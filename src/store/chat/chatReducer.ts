@@ -40,13 +40,14 @@ export const chatSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getChatList.fulfilled, (state, action) => {
       console.log("getChatList.fulfilled", action);
+      state.messages = action.payload;
     });
     builder.addCase(getChatList.rejected, (_, action) => {
       console.error("getChatList.rejected", action);
     });
     builder.addCase(getAnswer.fulfilled, (state, action) => {
       console.log("getAnswer.fulfilled", action);
-      state.messages[state.messages.length - 1].text = action.payload.response;
+      state.messages[state.messages.length - 1].text = action.payload[1].text;
     });
     builder.addCase(getAnswer.rejected, (_, action) => {
       console.error("getAnswer.rejected", action);
