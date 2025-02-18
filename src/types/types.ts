@@ -12,7 +12,7 @@ export type EntryStackParamList = {
 };
 
 export type Message = {
-  id: string;
+  idx: number;
   text: string;
   type: "sent" | "received";
 };

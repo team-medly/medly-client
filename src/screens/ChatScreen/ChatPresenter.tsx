@@ -74,6 +74,7 @@ interface Props {
   isLoaded: boolean;
   messages: Message[];
   inputText: string;
+  flatListRef: React.RefObject<FlatList>;
   pressBackBtn: () => void;
   actSetInputText: (text: string) => void;
   pressSendBtn: () => void;
@@ -83,6 +84,7 @@ const ChatScreen = ({
   isLoaded,
   messages,
   inputText,
+  flatListRef,
   pressBackBtn,
   actSetInputText,
   pressSendBtn,
@@ -105,8 +107,9 @@ const ChatScreen = ({
       </SafeAreaView>
       <SafeAreaView style={{ flex: 1 }}>
         <FlatList
+          ref={flatListRef}
           data={messages}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => `${item.type}_${item.idx}`}
           contentContainerStyle={{
             paddingHorizontal: 16,
           }}
@@ -115,7 +118,6 @@ const ChatScreen = ({
               <MessageText type={item.type}>{item.text}</MessageText>
             </MessageBubble>
           )}
-          inverted
         />
         <InputContainer>
           <MessageInput
@@ -125,7 +127,7 @@ const ChatScreen = ({
             value={inputText}
             onChangeText={actSetInputText}
           />
-          <SendButton onPress={pressSendBtn}>
+          <SendButton onPress={pressSendBtn} disabled={inputText === ""}>
             <Ionicons name="send" size={20} color="#fff" />
           </SendButton>
         </InputContainer>
