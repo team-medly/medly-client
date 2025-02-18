@@ -15,7 +15,7 @@ import { getAnswer, getChatList } from "../../store/chat/chatActions";
 
 type Props = StackScreenProps<RootStackParamList, "Chat">;
 
-export default function ChatContainer({ navigation }: Props) {
+export default function ChatContainer({ navigation, route }: Props) {
   const { accessToken, doctor } = useSelector((state: RootState) => state.root);
 
   const { isLoaded, messages, inputText } = useSelector(
@@ -23,6 +23,8 @@ export default function ChatContainer({ navigation }: Props) {
   );
 
   const flatListRef = useRef<FlatList>(null);
+
+  const { modelName } = route.params;
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -84,6 +86,7 @@ export default function ChatContainer({ navigation }: Props) {
       messages={messages}
       inputText={inputText}
       flatListRef={flatListRef}
+      modelName={modelName}
       pressBackBtn={pressBackBtn}
       actSetInputText={actSetInputText}
       pressSendBtn={pressSendBtn}

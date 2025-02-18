@@ -75,6 +75,7 @@ interface Props {
   messages: Message[];
   inputText: string;
   flatListRef: React.RefObject<FlatList>;
+  modelName: string;
   pressBackBtn: () => void;
   actSetInputText: (text: string) => void;
   pressSendBtn: () => void;
@@ -85,6 +86,7 @@ const ChatScreen = ({
   messages,
   inputText,
   flatListRef,
+  modelName,
   pressBackBtn,
   actSetInputText,
   pressSendBtn,
@@ -99,7 +101,7 @@ const ChatScreen = ({
           <IconButton onPress={pressBackBtn}>
             <Ionicons name="close" size={24} color="black" />
           </IconButton>
-          <Title>{"의료 지식 B"}</Title>
+          <Title>{modelName}</Title>
           <IconButton disabled={true}>
             <Ionicons name="share-social-outline" size={24} color="black" />
           </IconButton>

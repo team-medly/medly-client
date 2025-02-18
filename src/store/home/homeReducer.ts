@@ -5,11 +5,13 @@ import { PatientRecord } from "../../types/types";
 export interface HomeState {
   isLoaded: boolean;
   patients: PatientRecord[];
+  modalVisible: boolean;
 }
 
 const initialState: HomeState = {
   isLoaded: false,
   patients: [],
+  modalVisible: false,
 };
 
 export const homeSlice = createSlice({
@@ -19,9 +21,13 @@ export const homeSlice = createSlice({
     resetHome: (state) => {
       state.isLoaded = false;
       state.patients = [];
+      state.modalVisible = false;
     },
     setIsLoaded: (state, action: PayloadAction<boolean>) => {
       state.isLoaded = action.payload;
+    },
+    setModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.modalVisible = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -37,6 +43,6 @@ export const homeSlice = createSlice({
   },
 });
 
-export const { resetHome, setIsLoaded } = homeSlice.actions;
+export const { resetHome, setIsLoaded, setModalVisible } = homeSlice.actions;
 
 export default homeSlice.reducer;

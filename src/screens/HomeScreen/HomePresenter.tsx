@@ -1,10 +1,11 @@
 import React from "react";
-import { FlatList, TouchableWithoutFeedback } from "react-native";
+import { FlatList, Modal, TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Loader from "../../components/Common/Loader";
 import { PatientRecord } from "../../types/types";
+import { Model } from "../../constants/Enums";
 
 const SafeContainer = styled.SafeAreaView`
   flex: 1;
@@ -101,20 +102,49 @@ const FloatingButton = styled.TouchableOpacity`
   elevation: 10;
 `;
 
+const ModalContainer = styled.TouchableOpacity`
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.View`
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  align-items: center;
+`;
+
+const ModalButton = styled.TouchableOpacity`
+  margin-top: ${(props: { marginTop?: number }) => props.marginTop || 0}px;
+`;
+
+const ModalButtonText = styled.Text`
+  font-size: 18px;
+`;
+
 interface Props {
   isLoaded: boolean;
   patients: PatientRecord[];
-  navigateToChatScreen: () => void;
+  modalVisible: boolean;
+  clickChatBtn: () => void;
   actLogout: () => void;
   navigateToRecorderScreen: (idx: number) => void;
+  actSetModalVisible: (state: boolean) => void;
+  clickModelName: (modelName: string) => void;
 }
 
 export default function HomePresenter({
   isLoaded,
   patients,
-  navigateToChatScreen,
+  modalVisible,
+  clickChatBtn,
   actLogout,
   navigateToRecorderScreen,
+  actSetModalVisible,
+  clickModelName,
 }: Props) {
   const renderPatientItem = ({ item }: { item: PatientRecord }) => (
     <TouchableWithoutFeedback
@@ -158,9 +188,41 @@ export default function HomePresenter({
         keyExtractor={(item) => item.idx.toString()}
         renderItem={renderPatientItem}
       />
-      <FloatingButton onPress={navigateToChatScreen}>
+      <FloatingButton onPress={clickChatBtn}>
         <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />
       </FloatingButton>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => actSetModalVisible(false)}
+      >
+        <ModalContainer onPress={() => actSetModalVisible(false)}>
+          <ModalContent>
+            <ModalButton onPress={() => clickModelName(Model.ModelA)}>
+              <ModalButtonText>{Model.ModelA}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelB)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelB}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelC)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelC}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelD)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelD}</ModalButtonText>
+            </ModalButton>
+          </ModalContent>
+        </ModalContainer>
+      </Modal>
     </SafeContainer>
   ) : (
     <Loader />

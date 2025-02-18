@@ -3,7 +3,7 @@ export type RootStackParamList = {
   Home: undefined;
   Document: undefined;
   Recorder: { idx: number };
-  Chat: undefined;
+  Chat: { modelName: string };
 };
 
 export type EntryStackParamList = {
