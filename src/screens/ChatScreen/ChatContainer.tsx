@@ -49,7 +49,9 @@ export default function ChatContainer({ navigation, route }: Props) {
         ])
       );
       flatListRef.current?.scrollToEnd({ animated: true });
-      Keyboard.dismiss();
+      setTimeout(() => {
+        Keyboard.dismiss();
+      }, 100);
 
       await actGetAnswer();
     }
