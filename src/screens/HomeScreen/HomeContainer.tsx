@@ -32,8 +32,8 @@ export default function HomeContainer({ navigation }: Props) {
     dispatch(logout());
   };
 
-  const navigateToRecorderScreen = (idx: number) => {
-    navigation.navigate("Recorder", { idx });
+  const navigateToRecorderScreen = (idx: number, arrIdx: number) => {
+    navigation.navigate("Recorder", { idx, arrIdx });
   };
 
   const actSetModalVisible = (state: boolean) => {

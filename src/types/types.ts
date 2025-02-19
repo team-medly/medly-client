@@ -2,7 +2,7 @@ export type RootStackParamList = {
   MainBottom: undefined;
   Home: undefined;
   Document: undefined;
-  Recorder: { idx: number };
+  Recorder: { idx: number; arrIdx: number };
   Chat: { modelName: string };
 };
 
@@ -41,4 +41,5 @@ export type PatientRecord = {
   dateOfBirth: Date;
   scheduledAt: Date;
   status: boolean;
+  isSaving?: boolean;
 };

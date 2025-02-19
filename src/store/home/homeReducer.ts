@@ -29,6 +29,20 @@ export const homeSlice = createSlice({
     setModalVisible: (state, action: PayloadAction<boolean>) => {
       state.modalVisible = action.payload;
     },
+    setRecorderIsSaving: (
+      state,
+      action: PayloadAction<{ idx: number; isSaving: boolean }>
+    ) => {
+      const { idx, isSaving } = action.payload;
+
+      const patientArrayIndex = state.patients.findIndex(
+        (patient) => patient.idx === idx
+      );
+
+      if (patientArrayIndex !== -1) {
+        state.patients[patientArrayIndex].isSaving = isSaving;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPatientList.fulfilled, (state, action) => {
@@ -43,6 +57,7 @@ export const homeSlice = createSlice({
   },
 });
 
-export const { resetHome, setIsLoaded, setModalVisible } = homeSlice.actions;
+export const { resetHome, setIsLoaded, setModalVisible, setRecorderIsSaving } =
+  homeSlice.actions;
 
 export default homeSlice.reducer;

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ActivityIndicator, ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -72,13 +72,14 @@ const Description = styled.Text`
   margin-bottom: 20px;
 `;
 
-const FloatingButton = styled.TouchableOpacity`
+const FloatingButton = styled.TouchableOpacity<{ isSaving: boolean }>`
   position: absolute;
   bottom: 20px;
   align-self: center;
   width: 60px;
   height: 60px;
-  background-color: #7b6ef6;
+  background-color: ${({ isSaving }: { isSaving: boolean }) =>
+    isSaving ? "#ccc" : "#7b6ef6"};
   border-radius: 30px;
   align-items: center;
   justify-content: center;
@@ -87,12 +88,14 @@ const FloatingButton = styled.TouchableOpacity`
   shadow-opacity: 0.3;
   shadow-radius: 8px;
   elevation: 10;
+  opacity: ${({ isSaving }: { isSaving: boolean }) => (isSaving ? 0.6 : 1)};
 `;
 interface Props {
   isLoaded: boolean;
   recording: any;
   recordingUri: any;
   isPlaying: boolean;
+  isSaving: boolean;
   goBack: () => void;
   startRecording: () => void;
   stopRecording: () => void;
@@ -106,6 +109,7 @@ export default function RecordingConsentScreen({
   recording,
   recordingUri,
   isPlaying,
+  isSaving,
   goBack,
   startRecording,
   stopRecording,
@@ -119,9 +123,14 @@ export default function RecordingConsentScreen({
         <BackButton onPress={goBack}>
           <Ionicons name="chevron-back" size={24} color="#000" />
         </BackButton>
-        {recordingUri && (
-          <SaveButton onPress={saveAudioFileToServer}>
+        {recordingUri && !isSaving && (
+          <SaveButton onPress={saveAudioFileToServer} disabled={isSaving}>
             <Ionicons name="save" size={24} color="#000" />
+          </SaveButton>
+        )}
+        {isSaving && (
+          <SaveButton onPress={saveAudioFileToServer} disabled={isSaving}>
+            <ActivityIndicator size="small" color="#000" />
           </SaveButton>
         )}
       </Header>
@@ -136,14 +145,26 @@ export default function RecordingConsentScreen({
         <Divider />
         <SummaryContainer>
           <SectionTitle>Summary</SectionTitle>
-          <Description>아직 설명이 녹음되지 않았습니다.</Description>
+          <Description>
+            {isSaving
+              ? "내용을 요약 중 입니다."
+              : "아직 설명이 녹음되지 않았습니다."}
+          </Description>
           <SectionTitle>Detail</SectionTitle>
-          <Description>아직 설명이 녹음되지 않았습니다.</Description>
+          <Description>
+            {isSaving
+              ? "내용을 요약 중 입니다."
+              : "아직 설명이 녹음되지 않았습니다."}
+          </Description>
         </SummaryContainer>
       </ScrollView>
 
       {!recordingUri && (
-        <FloatingButton onPress={recording ? stopRecording : startRecording}>
+        <FloatingButton
+          onPress={recording ? stopRecording : startRecording}
+          disabled={isSaving}
+          isSaving={isSaving}
+        >
           <Ionicons name={recording ? "stop" : "mic"} size={28} color="#fff" />
         </FloatingButton>
       )}
@@ -151,6 +172,8 @@ export default function RecordingConsentScreen({
       {recordingUri && (
         <FloatingButton
           onPress={isPlaying ? pauseSound : () => playSound(recordingUri)}
+          disabled={isSaving}
+          isSaving={isSaving}
         >
           <Ionicons
             name={isPlaying ? "pause" : "play"}

@@ -131,7 +131,7 @@ interface Props {
   modalVisible: boolean;
   clickChatBtn: () => void;
   actLogout: () => void;
-  navigateToRecorderScreen: (idx: number) => void;
+  navigateToRecorderScreen: (idx: number, arrIdx: number) => void;
   actSetModalVisible: (state: boolean) => void;
   clickModelName: (modelName: string) => void;
 }
@@ -146,9 +146,15 @@ export default function HomePresenter({
   actSetModalVisible,
   clickModelName,
 }: Props) {
-  const renderPatientItem = ({ item }: { item: PatientRecord }) => (
+  const renderPatientItem = ({
+    item,
+    index,
+  }: {
+    item: PatientRecord;
+    index: number;
+  }) => (
     <TouchableWithoutFeedback
-      onPress={() => navigateToRecorderScreen(item.idx)}
+      onPress={() => navigateToRecorderScreen(item.idx, index)}
     >
       <PatientItem>
         <PatientItemUpperView>

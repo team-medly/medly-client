@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Audio } from "expo-av";
 
 import { RootStackParamList } from "../../types/types";
 import RecorderPresenter from "./RecorderPresenter";
-import { RootState } from "../../store/store";
+import { RootState, AppDispatch } from "../../store/store";
+import { uploadVoiceRecord } from "../../store/recorder/recorderActions";
+import {
+  resetRecorder,
+  setIsSaving,
+} from "../../store/recorder/recorderReducer";
+import { setRecorderIsSaving } from "../../store/home/homeReducer";
 
 type Props = StackScreenProps<RootStackParamList, "Recorder">;
 
-export default function RecorderContainer({ navigation }: Props) {
-  const { isLoaded } = useSelector((state: RootState) => state.recorder);
+export default function RecorderContainer({ navigation, route }: Props) {
+  const { accessToken } = useSelector((state: RootState) => state.root);
+
+  const { patients } = useSelector((state: RootState) => state.home);
+
+  const { isLoaded, isSaving } = useSelector(
+    (state: RootState) => state.recorder
+  );
 
   const [recording, setRecording] = useState<Audio.Recording | undefined>(
     undefined
@@ -23,6 +35,10 @@ export default function RecorderContainer({ navigation }: Props) {
   const [exsound, setSound] = useState<Audio.Sound | undefined>(undefined);
 
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const { idx, arrIdx } = route.params;
+
+  const dispatch: AppDispatch = useDispatch();
 
   const goBack = () => navigation.goBack();
 
@@ -91,11 +107,44 @@ export default function RecorderContainer({ navigation }: Props) {
     }
   }
 
-  async function saveAudioFileToServer() {}
+  async function saveAudioFileToServer() {
+    if (!recordingUri) {
+      return;
+    }
+
+    try {
+      const recordIdx = idx;
+      const fileType = "audio/mp4a-latm";
+
+      dispatch(setIsSaving(true));
+      dispatch(setRecorderIsSaving({ idx, isSaving: true }));
+
+      await dispatch(
+        uploadVoiceRecord({
+          accessToken,
+          recordIdx,
+          fileUri: recordingUri,
+          fileType,
+        })
+      );
+
+      console.log("Audio file uploaded successfully!");
+      dispatch(setIsSaving(false));
+      dispatch(setRecorderIsSaving({ idx, isSaving: false }));
+    } catch (error) {
+      console.error("Failed to upload audio file", error);
+      dispatch(setIsSaving(false));
+      dispatch(setRecorderIsSaving({ idx, isSaving: false }));
+    }
+  }
 
   useEffect(() => {
-    return () => {};
-  }, []);
+    dispatch(setIsSaving(patients[arrIdx].isSaving ? true : false));
+
+    return () => {
+      dispatch(resetRecorder());
+    };
+  }, [patients]);
 
   return (
     <RecorderPresenter
@@ -103,6 +152,7 @@ export default function RecorderContainer({ navigation }: Props) {
       recording={recording}
       recordingUri={recordingUri}
       isPlaying={isPlaying}
+      isSaving={isSaving}
       goBack={goBack}
       startRecording={startRecording}
       stopRecording={stopRecording}
