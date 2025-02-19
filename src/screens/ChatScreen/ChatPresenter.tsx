@@ -2,8 +2,10 @@ import React from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -70,15 +72,44 @@ const SendButton = styled.TouchableOpacity`
   justify-content: center;
 `;
 
+const CitationBtn = styled.TouchableOpacity`
+  background-color: #eaeaea;
+  padding: 12px 16px;
+  border-radius: 16px;
+  margin-bottom: 6px;
+  margin-right: 6px;
+`;
+
+const CitationText = styled.Text``;
+
+const ModalView = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalText = styled.Text`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: center;
+`;
+
 interface Props {
   isLoaded: boolean;
   messages: Message[];
   inputText: string;
   flatListRef: React.RefObject<FlatList>;
   modelName: string;
+  isModalVisible: boolean;
+  modalText: string;
   pressBackBtn: () => void;
   actSetInputText: (text: string) => void;
   pressSendBtn: () => void;
+  actSetIsModalVisible: (state: boolean) => void;
+  clickCitationBtn: (text: string) => void;
 }
 
 const ChatScreen = ({
@@ -87,9 +118,13 @@ const ChatScreen = ({
   inputText,
   flatListRef,
   modelName,
+  isModalVisible,
+  modalText,
   pressBackBtn,
   actSetInputText,
   pressSendBtn,
+  actSetIsModalVisible,
+  clickCitationBtn,
 }: Props) => {
   return isLoaded ? (
     <KeyboardAvoidingView
@@ -116,9 +151,30 @@ const ChatScreen = ({
             paddingHorizontal: 16,
           }}
           renderItem={({ item }) => (
-            <MessageBubble type={item.type}>
-              <MessageText type={item.type}>{item.text}</MessageText>
-            </MessageBubble>
+            <>
+              <MessageBubble type={item.type}>
+                <MessageText type={item.type}>{item.text}</MessageText>
+              </MessageBubble>
+              {item.type === "received" && (
+                <ScrollView
+                  style={{
+                    maxWidth: "75%",
+                  }}
+                  horizontal
+                >
+                  {item.citation.map(
+                    (list: { name: string; content: string }) => (
+                      <CitationBtn
+                        key={list.name}
+                        onPress={() => clickCitationBtn(list.content)}
+                      >
+                        <CitationText>{list.name}</CitationText>
+                      </CitationBtn>
+                    )
+                  )}
+                </ScrollView>
+              )}
+            </>
           )}
           initialNumToRender={messages.length}
         />
@@ -135,6 +191,22 @@ const ChatScreen = ({
           </SendButton>
         </InputContainer>
       </SafeAreaView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => actSetIsModalVisible(false)}
+      >
+        <ModalView>
+          <ModalText>{modalText}</ModalText>
+          <Ionicons
+            name="close"
+            size={24}
+            color="black"
+            onPress={() => actSetIsModalVisible(false)}
+          />
+        </ModalView>
+      </Modal>
     </KeyboardAvoidingView>
   ) : (
     <Loader />

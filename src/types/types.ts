@@ -15,6 +15,10 @@ export type Message = {
   idx: number;
   text: string;
   type: "sent" | "received";
+  citation: {
+    name: string;
+    content: string;
+  }[];
 };
 
 export type Doctor = {

@@ -9,6 +9,8 @@ import {
   sendMessage,
   resetChat,
   setInputText,
+  setIsModalVisible,
+  setModalText,
 } from "../../store/chat/chatReducer";
 import { RootStackParamList } from "../../types/types";
 import { getAnswer, getChatList } from "../../store/chat/chatActions";
@@ -18,9 +20,8 @@ type Props = StackScreenProps<RootStackParamList, "Chat">;
 export default function ChatContainer({ navigation, route }: Props) {
   const { accessToken, doctor } = useSelector((state: RootState) => state.root);
 
-  const { isLoaded, messages, inputText } = useSelector(
-    (state: RootState) => state.chat
-  );
+  const { isLoaded, messages, inputText, isModalVisible, modalText } =
+    useSelector((state: RootState) => state.chat);
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -84,6 +85,15 @@ export default function ChatContainer({ navigation, route }: Props) {
     }
   };
 
+  const actSetIsModalVisible = (state: boolean) => {
+    dispatch(setIsModalVisible(state));
+  };
+
+  const clickCitationBtn = (text: string) => {
+    dispatch(setModalText(text));
+    dispatch(setIsModalVisible(true));
+  };
+
   useEffect(() => {
     actGetChatList();
 
@@ -99,9 +109,13 @@ export default function ChatContainer({ navigation, route }: Props) {
       inputText={inputText}
       flatListRef={flatListRef}
       modelName={modelName}
+      isModalVisible={isModalVisible}
+      modalText={modalText}
       pressBackBtn={pressBackBtn}
       actSetInputText={actSetInputText}
       pressSendBtn={pressSendBtn}
+      actSetIsModalVisible={actSetIsModalVisible}
+      clickCitationBtn={clickCitationBtn}
     />
   );
 }

@@ -6,12 +6,16 @@ export interface ChatState {
   isLoaded: boolean;
   messages: Message[];
   inputText: string;
+  isModalVisible: boolean;
+  modalText: string;
 }
 
 const initialState: ChatState = {
   isLoaded: true,
   messages: [],
   inputText: "",
+  isModalVisible: false,
+  modalText: "",
 };
 
 export const chatSlice = createSlice({
@@ -22,6 +26,8 @@ export const chatSlice = createSlice({
       state.isLoaded = true;
       state.messages = [];
       state.inputText = "";
+      state.isModalVisible = false;
+      state.modalText = "";
     },
     setIsLoaded: (state, action) => {
       state.isLoaded = action.payload;
@@ -35,6 +41,12 @@ export const chatSlice = createSlice({
     sendMessage: (state, action) => {
       state.messages.push(...action.payload);
       state.inputText = "";
+    },
+    setIsModalVisible: (state, action) => {
+      state.isModalVisible = action.payload;
+    },
+    setModalText: (state, action) => {
+      state.modalText = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -61,6 +73,8 @@ export const {
   setMessages,
   setInputText,
   sendMessage,
+  setIsModalVisible,
+  setModalText,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
