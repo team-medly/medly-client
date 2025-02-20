@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseURL } from "../../constants/BaseURL";
+import { Model } from "../../constants/Enums";
 
 type getChatListParams = {
   accessToken: string;
@@ -41,6 +42,16 @@ export const getAnswer = createAsyncThunk(
         Authorization: `Bearer ${accessToken}`,
       },
     });
+
+    if (model === Model.ModelA || model === Model.ModelB) {
+      const response = await api.post(`/chats`, {
+        doctorIdx,
+        model: "문헌 검색",
+        messages: query,
+        mode: model === Model.ModelA ? "faq" : "doc",
+      });
+      return response.data;
+    }
 
     const response = await api.post(`/chats`, {
       doctorIdx,

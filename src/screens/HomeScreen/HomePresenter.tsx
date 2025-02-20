@@ -250,6 +250,12 @@ export default function HomePresenter({
             >
               <ModalButtonText>{Model.ModelD}</ModalButtonText>
             </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelE)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelE}</ModalButtonText>
+            </ModalButton>
           </ModalContent>
         </ModalContainer>
       </Modal>
