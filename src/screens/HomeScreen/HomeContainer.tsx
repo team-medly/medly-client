@@ -7,20 +7,25 @@ import { RootStackParamList } from "../../types/types";
 import { AppDispatch, RootState } from "../../store/store";
 import { logout } from "../../store/root/rootReducer";
 import { getPatientList } from "../../store/home/homeActions";
-import { resetHome, setModalVisible } from "../../store/home/homeReducer";
+import {
+  resetHome,
+  setIsRefreshing,
+  setModalVisible,
+} from "../../store/home/homeReducer";
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
 
 export default function HomeContainer({ navigation }: Props) {
   const { accessToken } = useSelector((state: RootState) => state.root);
 
-  const { isLoaded, patients, modalVisible } = useSelector(
+  const { isLoaded, patients, modalVisible, isRefreshing } = useSelector(
     (state: RootState) => state.home
   );
 
   const dispatch: AppDispatch = useDispatch();
 
   const preloadHome = () => {
+    dispatch(setIsRefreshing(true));
     dispatch(getPatientList({ accessToken }));
   };
 
@@ -58,11 +63,13 @@ export default function HomeContainer({ navigation }: Props) {
       isLoaded={isLoaded}
       patients={patients}
       modalVisible={modalVisible}
+      isRefreshing={isRefreshing}
       clickChatBtn={clickChatBtn}
       actLogout={actLogout}
       navigateToRecorderScreen={navigateToRecorderScreen}
       actSetModalVisible={actSetModalVisible}
       clickModelName={clickModelName}
+      preloadHome={preloadHome}
     />
   );
 }

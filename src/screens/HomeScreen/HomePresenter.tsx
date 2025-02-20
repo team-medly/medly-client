@@ -129,22 +129,26 @@ interface Props {
   isLoaded: boolean;
   patients: PatientRecord[];
   modalVisible: boolean;
+  isRefreshing: boolean;
   clickChatBtn: () => void;
   actLogout: () => void;
   navigateToRecorderScreen: (idx: number, arrIdx: number) => void;
   actSetModalVisible: (state: boolean) => void;
   clickModelName: (modelName: string) => void;
+  preloadHome: () => void;
 }
 
 export default function HomePresenter({
   isLoaded,
   patients,
   modalVisible,
+  isRefreshing,
   clickChatBtn,
   actLogout,
   navigateToRecorderScreen,
   actSetModalVisible,
   clickModelName,
+  preloadHome,
 }: Props) {
   const renderPatientItem = ({
     item,
@@ -193,7 +197,9 @@ export default function HomePresenter({
       <FlatList
         data={patients}
         keyExtractor={(item) => item.idx.toString()}
+        refreshing={isRefreshing}
         renderItem={renderPatientItem}
+        onRefresh={preloadHome}
       />
       <FloatingButton onPress={clickChatBtn}>
         <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />

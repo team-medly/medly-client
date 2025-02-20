@@ -6,12 +6,14 @@ export interface HomeState {
   isLoaded: boolean;
   patients: PatientRecord[];
   modalVisible: boolean;
+  isRefreshing: boolean;
 }
 
 const initialState: HomeState = {
   isLoaded: false,
   patients: [],
   modalVisible: false,
+  isRefreshing: false,
 };
 
 export const homeSlice = createSlice({
@@ -22,6 +24,7 @@ export const homeSlice = createSlice({
       state.isLoaded = false;
       state.patients = [];
       state.modalVisible = false;
+      state.isRefreshing = false;
     },
     setIsLoaded: (state, action: PayloadAction<boolean>) => {
       state.isLoaded = action.payload;
@@ -43,6 +46,9 @@ export const homeSlice = createSlice({
         state.patients[patientArrayIndex].isSaving = isSaving;
       }
     },
+    setIsRefreshing: (state, action: PayloadAction<boolean>) => {
+      state.isRefreshing = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPatientList.fulfilled, (state, action) => {
@@ -50,6 +56,7 @@ export const homeSlice = createSlice({
 
       state.patients = action.payload.patients;
       state.isLoaded = true;
+      state.isRefreshing = false;
     });
     builder.addCase(getPatientList.rejected, (_, action) => {
       console.error("getPatientList.rejected", action);
@@ -57,7 +64,12 @@ export const homeSlice = createSlice({
   },
 });
 
-export const { resetHome, setIsLoaded, setModalVisible, setRecorderIsSaving } =
-  homeSlice.actions;
+export const {
+  resetHome,
+  setIsLoaded,
+  setModalVisible,
+  setRecorderIsSaving,
+  setIsRefreshing,
+} = homeSlice.actions;
 
 export default homeSlice.reducer;
