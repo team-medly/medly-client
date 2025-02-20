@@ -45,5 +45,6 @@ export type PatientRecord = {
   dateOfBirth: Date;
   scheduledAt: Date;
   status: boolean;
+  nameOfSurgery: string;
   isSaving?: boolean;
 };

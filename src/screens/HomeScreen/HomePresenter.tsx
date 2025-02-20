@@ -173,6 +173,7 @@ export default function HomePresenter({
           <PatientInfo>{`Scheduled: ${new Date(
             item.scheduledAt
           ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+          <PatientInfo>{`Name of Surgery: ${item.nameOfSurgery}`}</PatientInfo>
         </PatientItemBelowView>
       </PatientItem>
     </TouchableWithoutFeedback>
