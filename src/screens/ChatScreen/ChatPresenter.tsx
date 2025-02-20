@@ -155,25 +155,27 @@ const ChatScreen = ({
               <MessageBubble type={item.type}>
                 <MessageText type={item.type}>{item.text}</MessageText>
               </MessageBubble>
-              {item.type === "received" && (
-                <ScrollView
-                  style={{
-                    maxWidth: "75%",
-                  }}
-                  horizontal
-                >
-                  {item.citation.map(
-                    (list: { name: string; content: string }) => (
-                      <CitationBtn
-                        key={list.name}
-                        onPress={() => clickCitationBtn(list.content)}
-                      >
-                        <CitationText>{list.name}</CitationText>
-                      </CitationBtn>
-                    )
-                  )}
-                </ScrollView>
-              )}
+              {item.type === "received" &&
+                item.citation &&
+                item.citation.length > 0 && (
+                  <ScrollView
+                    style={{
+                      maxWidth: "75%",
+                    }}
+                    horizontal
+                  >
+                    {item.citation.map(
+                      (list: { name: string; content: string }) => (
+                        <CitationBtn
+                          key={list.name}
+                          onPress={() => clickCitationBtn(list.content)}
+                        >
+                          <CitationText>{list.name}</CitationText>
+                        </CitationBtn>
+                      )
+                    )}
+                  </ScrollView>
+                )}
             </>
           )}
           initialNumToRender={messages.length}
