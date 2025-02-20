@@ -4,11 +4,17 @@ import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Loader from "../../components/Common/Loader";
+import { PatientDetail } from "../../types/types";
 
 const SafeContainer = styled.SafeAreaView`
   flex: 1;
   background-color: #fff;
 `;
+
+const ScrollViewContainer = styled.View`
+  flex: 0.9;
+`;
+
 const BackButton = styled.TouchableOpacity``;
 
 const SaveButton = styled.TouchableOpacity``;
@@ -36,16 +42,18 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-const Status = styled.View`
+const Status = styled.View<{ completed: boolean }>`
   align-self: flex-start;
-  background-color: #7b6ef6;
+  background-color: ${({ completed }: { completed: boolean }) =>
+    completed ? "#ddd" : "#7b6ef6"};
   padding: 6px 12px;
   border-radius: 5px;
   margin-top: 10px;
 `;
 
-const StatusText = styled.Text`
-  color: #fff;
+const StatusText = styled.Text<{ completed: boolean }>`
+  color: ${({ completed }: { completed: boolean }) =>
+    completed ? "#666" : "#fff"};
   font-size: 14px;
 `;
 
@@ -96,6 +104,7 @@ interface Props {
   recordingUri: any;
   isPlaying: boolean;
   isSaving: boolean;
+  patientDetail: PatientDetail;
   goBack: () => void;
   startRecording: () => void;
   stopRecording: () => void;
@@ -110,6 +119,7 @@ export default function RecordingConsentScreen({
   recordingUri,
   isPlaying,
   isSaving,
+  patientDetail,
   goBack,
   startRecording,
   stopRecording,
@@ -123,7 +133,7 @@ export default function RecordingConsentScreen({
         <BackButton onPress={goBack}>
           <Ionicons name="chevron-back" size={24} color="#000" />
         </BackButton>
-        {recordingUri && !isSaving && (
+        {recordingUri && !isSaving && !patientDetail.filePath && (
           <SaveButton onPress={saveAudioFileToServer} disabled={isSaving}>
             <Ionicons name="save" size={24} color="#000" />
           </SaveButton>
@@ -134,30 +144,38 @@ export default function RecordingConsentScreen({
           </SaveButton>
         )}
       </Header>
-      <ScrollView>
-        <TitleContainer>
-          <ScheduledDate>Scheduled: 2024-01-22</ScheduledDate>
-          <Title>인공관절치환술 동의서</Title>
-          <Status>
-            <StatusText>설명 필요</StatusText>
-          </Status>
-        </TitleContainer>
-        <Divider />
-        <SummaryContainer>
-          <SectionTitle>Summary</SectionTitle>
-          <Description>
-            {isSaving
-              ? "내용을 요약 중 입니다."
-              : "아직 설명이 녹음되지 않았습니다."}
-          </Description>
-          <SectionTitle>Detail</SectionTitle>
-          <Description>
-            {isSaving
-              ? "내용을 요약 중 입니다."
-              : "아직 설명이 녹음되지 않았습니다."}
-          </Description>
-        </SummaryContainer>
-      </ScrollView>
+      <ScrollViewContainer>
+        <ScrollView>
+          <TitleContainer>
+            <ScheduledDate>{`Scheduled: ${patientDetail.scheduledAt}`}</ScheduledDate>
+            <Title>{patientDetail.nameOfSurgery}</Title>
+            <Status completed={patientDetail.filePath}>
+              <StatusText completed={patientDetail.filePath}>
+                {patientDetail.filePath ? "설명 완료" : "설명 필요"}
+              </StatusText>
+            </Status>
+          </TitleContainer>
+          <Divider />
+          <SummaryContainer>
+            <SectionTitle>{"Summary"}</SectionTitle>
+            <Description>
+              {isSaving
+                ? "내용을 요약 중 입니다."
+                : patientDetail.surgeryRecord === ""
+                ? "아직 설명이 녹음되지 않았습니다."
+                : JSON.parse(patientDetail.surgeryRecord).summary}
+            </Description>
+            <SectionTitle>{"Detail"}</SectionTitle>
+            <Description>
+              {isSaving
+                ? "내용을 요약 중 입니다."
+                : patientDetail.surgeryRecord === ""
+                ? "아직 설명이 녹음되지 않았습니다."
+                : JSON.parse(patientDetail.surgeryRecord).detail}
+            </Description>
+          </SummaryContainer>
+        </ScrollView>
+      </ScrollViewContainer>
 
       {!recordingUri && (
         <FloatingButton

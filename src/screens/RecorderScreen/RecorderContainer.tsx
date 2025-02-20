@@ -6,10 +6,14 @@ import { Audio } from "expo-av";
 import { RootStackParamList } from "../../types/types";
 import RecorderPresenter from "./RecorderPresenter";
 import { RootState, AppDispatch } from "../../store/store";
-import { uploadVoiceRecord } from "../../store/recorder/recorderActions";
+import {
+  getRecordDetail,
+  uploadVoiceRecord,
+} from "../../store/recorder/recorderActions";
 import {
   resetRecorder,
   setIsSaving,
+  setRecordingUriInReducer,
 } from "../../store/recorder/recorderReducer";
 import { setRecorderIsSaving } from "../../store/home/homeReducer";
 
@@ -20,15 +24,13 @@ export default function RecorderContainer({ navigation, route }: Props) {
 
   const { patients } = useSelector((state: RootState) => state.home);
 
-  const { isLoaded, isSaving } = useSelector(
+  const { isLoaded, isSaving, patientDetail, recordingUri } = useSelector(
     (state: RootState) => state.recorder
   );
 
   const [recording, setRecording] = useState<Audio.Recording | undefined>(
     undefined
   );
-
-  const [recordingUri, setRecordingUri] = useState<string | null>(null);
 
   const [permissionResponse, requestPermission] = Audio.usePermissions();
 
@@ -40,7 +42,14 @@ export default function RecorderContainer({ navigation, route }: Props) {
 
   const dispatch: AppDispatch = useDispatch();
 
-  const goBack = () => navigation.goBack();
+  const goBack = () => {
+    pauseSound();
+    navigation.goBack();
+  };
+
+  const setRecordingUri = (uri: string | null) => {
+    dispatch(setRecordingUriInReducer(uri));
+  };
 
   async function startRecording() {
     try {
@@ -140,6 +149,7 @@ export default function RecorderContainer({ navigation, route }: Props) {
 
   useEffect(() => {
     dispatch(setIsSaving(patients[arrIdx].isSaving ? true : false));
+    dispatch(getRecordDetail({ accessToken, recordIdx: idx }));
 
     return () => {
       dispatch(resetRecorder());
@@ -153,6 +163,7 @@ export default function RecorderContainer({ navigation, route }: Props) {
       recordingUri={recordingUri}
       isPlaying={isPlaying}
       isSaving={isSaving}
+      patientDetail={patientDetail}
       goBack={goBack}
       startRecording={startRecording}
       stopRecording={stopRecording}

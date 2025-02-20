@@ -50,4 +50,26 @@ export const uploadVoiceRecord = createAsyncThunk(
   }
 );
 
-export default { uploadVoiceRecord };
+type GetRecordDetailParams = {
+  accessToken: string;
+  recordIdx: number;
+};
+
+export const getRecordDetail = createAsyncThunk(
+  "/userRecords/:recordIdx",
+  async ({ accessToken, recordIdx }: GetRecordDetailParams) => {
+    const api = axios.create({
+      baseURL,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const response = await api.get(`/userRecords/${recordIdx}`);
+
+    return response.data;
+  }
+);
+
+export default { uploadVoiceRecord, getRecordDetail };
