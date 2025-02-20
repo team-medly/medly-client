@@ -64,7 +64,7 @@ export default function ChatContainer({ navigation, route }: Props) {
         getAnswer({
           accessToken,
           doctorIdx: doctor.idx,
-          model: "문헌 검색",
+          model: modelName,
           query: inputText,
         })
       );

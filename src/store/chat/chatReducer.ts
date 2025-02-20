@@ -60,6 +60,8 @@ export const chatSlice = createSlice({
     builder.addCase(getAnswer.fulfilled, (state, action) => {
       console.log("getAnswer.fulfilled", action);
       state.messages[state.messages.length - 1].text = action.payload[1].text;
+      state.messages[state.messages.length - 1].citation =
+        action.payload[1].citation || [];
     });
     builder.addCase(getAnswer.rejected, (_, action) => {
       console.error("getAnswer.rejected", action);
