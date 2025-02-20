@@ -47,4 +47,13 @@ export type PatientRecord = {
   status: boolean;
   nameOfSurgery: string;
   isSaving?: boolean;
+  surgeryRecord: string;
+};
+
+export type PatientDetail = {
+  idx: number;
+  scheduledAt: string;
+  nameOfSurgery: string;
+  surgeryRecord: string;
+  filePath: string | null;
 };

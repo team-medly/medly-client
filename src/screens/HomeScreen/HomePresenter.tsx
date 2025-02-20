@@ -159,9 +159,9 @@ export default function HomePresenter({
       <PatientItem>
         <PatientItemUpperView>
           <PatientName>{item.name}</PatientName>
-          <StatusButton completed={item.status} disabled={true}>
-            <StatusText completed={item.status}>
-              {item.status ? "설명 완료" : "설명 필요"}
+          <StatusButton completed={item.surgeryRecord !== ""} disabled={true}>
+            <StatusText completed={item.surgeryRecord !== ""}>
+              {item.surgeryRecord !== "" ? "설명 완료" : "설명 필요"}
             </StatusText>
           </StatusButton>
         </PatientItemUpperView>
