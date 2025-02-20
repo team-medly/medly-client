@@ -130,6 +130,8 @@ interface Props {
   patients: PatientRecord[];
   modalVisible: boolean;
   isRefreshing: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
   clickChatBtn: () => void;
   actLogout: () => void;
   navigateToRecorderScreen: (idx: number, arrIdx: number) => void;
@@ -143,6 +145,8 @@ export default function HomePresenter({
   patients,
   modalVisible,
   isRefreshing,
+  searchQuery,
+  setSearchQuery,
   clickChatBtn,
   actLogout,
   navigateToRecorderScreen,
@@ -192,7 +196,20 @@ export default function HomePresenter({
       </Header>
       <SearchContainer>
         <Ionicons name="search" size={20} color="#aaa" />
-        <SearchInput placeholder="환자 검색" placeholderTextColor="#aaa" />
+        <SearchInput
+          placeholder="환자 검색"
+          placeholderTextColor="#aaa"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery ? (
+          <Ionicons
+            name="close-circle"
+            size={20}
+            color="#aaa"
+            onPress={() => setSearchQuery("")}
+          />
+        ) : null}
       </SearchContainer>
       <FlatList
         data={patients}

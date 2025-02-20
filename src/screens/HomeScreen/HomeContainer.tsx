@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -20,6 +20,12 @@ export default function HomeContainer({ navigation }: Props) {
 
   const { isLoaded, patients, modalVisible, isRefreshing } = useSelector(
     (state: RootState) => state.home
+  );
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const dispatch: AppDispatch = useDispatch();
@@ -61,9 +67,11 @@ export default function HomeContainer({ navigation }: Props) {
   return (
     <HomePresenter
       isLoaded={isLoaded}
-      patients={patients}
+      patients={filteredPatients}
       modalVisible={modalVisible}
       isRefreshing={isRefreshing}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
       clickChatBtn={clickChatBtn}
       actLogout={actLogout}
       navigateToRecorderScreen={navigateToRecorderScreen}
