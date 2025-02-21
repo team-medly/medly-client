@@ -9,7 +9,7 @@ export enum AppState {
 export enum Model {
   ModelA = "문헌 검색(일반)",
   ModelB = "문헌 검색(참조)",
-  ModelC = "FAQ",
+  ModelC = "PatientCareGPT",
   ModelD = "MedSurgGPT",
   ModelE = "MedBioGPT",
 }
