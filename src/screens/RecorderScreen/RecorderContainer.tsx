@@ -32,6 +32,8 @@ export default function RecorderContainer({ navigation, route }: Props) {
     undefined
   );
 
+  const [isLoadingFile, setIsLoadingFile] = useState<boolean>(false);
+
   const [permissionResponse, requestPermission] = Audio.usePermissions();
 
   const [exsound, setSound] = useState<Audio.Sound | undefined>(undefined);
@@ -94,7 +96,12 @@ export default function RecorderContainer({ navigation, route }: Props) {
       setIsPlaying(true);
       return;
     }
+    if (isLoadingFile) {
+      return;
+    }
+    setIsLoadingFile(true);
     const { sound } = await Audio.Sound.createAsync({ uri });
+    setIsLoadingFile(false);
     setSound(sound);
     await sound.playAsync();
 
@@ -164,6 +171,7 @@ export default function RecorderContainer({ navigation, route }: Props) {
       isPlaying={isPlaying}
       isSaving={isSaving}
       patientDetail={patientDetail}
+      isLoadingFile={isLoadingFile}
       goBack={goBack}
       startRecording={startRecording}
       stopRecording={stopRecording}

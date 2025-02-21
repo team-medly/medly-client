@@ -105,6 +105,7 @@ interface Props {
   isPlaying: boolean;
   isSaving: boolean;
   patientDetail: PatientDetail;
+  isLoadingFile: boolean;
   goBack: () => void;
   startRecording: () => void;
   stopRecording: () => void;
@@ -120,6 +121,7 @@ export default function RecordingConsentScreen({
   isPlaying,
   isSaving,
   patientDetail,
+  isLoadingFile,
   goBack,
   startRecording,
   stopRecording,
@@ -190,11 +192,11 @@ export default function RecordingConsentScreen({
       {recordingUri && (
         <FloatingButton
           onPress={isPlaying ? pauseSound : () => playSound(recordingUri)}
-          disabled={isSaving}
+          disabled={isSaving || isLoadingFile}
           isSaving={isSaving}
         >
           <Ionicons
-            name={isPlaying ? "pause" : "play"}
+            name={isPlaying ? "pause" : isLoadingFile ? "hourglass" : "play"}
             size={28}
             color="#fff"
           />
