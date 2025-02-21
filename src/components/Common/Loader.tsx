@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 
@@ -9,7 +8,6 @@ const SafeContainer = styled.SafeAreaView`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.color.mainBg};
 `;
 
 const LoaderText = styled.Text`
@@ -19,12 +17,10 @@ const LoaderText = styled.Text`
 `;
 
 export default function Loader() {
-  const { t } = useTranslation();
-
   return (
     <SafeContainer>
       <ActivityIndicator color={GREY_COLOR} />
-      <LoaderText>{t("components.loader.text.loaderText")}</LoaderText>
+      <LoaderText>{"불러오는중..."}</LoaderText>
     </SafeContainer>
   );
 }

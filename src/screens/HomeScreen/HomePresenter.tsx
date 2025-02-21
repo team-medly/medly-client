@@ -1,117 +1,11 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Modal, TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Loader from "../../components/Common/Loader";
-
-const patients = [
-  {
-    id: "00001",
-    name: "안의진",
-    status: "설명 필요",
-    birthDate: "1990-01-01",
-    scheduledDate: "2023-10-01",
-  },
-  {
-    id: "00002",
-    name: "정지현",
-    status: "설명 필요",
-    birthDate: "1985-02-15",
-    scheduledDate: "2023-10-02",
-  },
-  {
-    id: "00003",
-    name: "김재빈",
-    status: "설명 완료",
-    birthDate: "1992-03-20",
-    scheduledDate: "2023-10-03",
-  },
-  {
-    id: "00004",
-    name: "선우진성",
-    status: "설명 완료",
-    birthDate: "1988-04-25",
-    scheduledDate: "2023-10-04",
-  },
-  {
-    id: "00005",
-    name: "현수민",
-    status: "설명 필요",
-    birthDate: "1995-05-30",
-    scheduledDate: "2023-10-05",
-  },
-  {
-    id: "00006",
-    name: "박지훈",
-    status: "설명 필요",
-    birthDate: "1991-06-10",
-    scheduledDate: "2023-10-06",
-  },
-  {
-    id: "00007",
-    name: "이서준",
-    status: "설명 완료",
-    birthDate: "1987-07-15",
-    scheduledDate: "2023-10-07",
-  },
-  {
-    id: "00008",
-    name: "최민준",
-    status: "설명 필요",
-    birthDate: "1993-08-20",
-    scheduledDate: "2023-10-08",
-  },
-  {
-    id: "00009",
-    name: "김하늘",
-    status: "설명 완료",
-    birthDate: "1989-09-25",
-    scheduledDate: "2023-10-09",
-  },
-  {
-    id: "00010",
-    name: "오지호",
-    status: "설명 필요",
-    birthDate: "1994-10-30",
-    scheduledDate: "2023-10-10",
-  },
-  {
-    id: "00011",
-    name: "장민서",
-    status: "설명 완료",
-    birthDate: "1990-11-05",
-    scheduledDate: "2023-10-11",
-  },
-  {
-    id: "00012",
-    name: "윤지우",
-    status: "설명 필요",
-    birthDate: "1986-12-10",
-    scheduledDate: "2023-10-12",
-  },
-  {
-    id: "00013",
-    name: "서윤아",
-    status: "설명 완료",
-    birthDate: "1992-01-15",
-    scheduledDate: "2023-10-13",
-  },
-  {
-    id: "00014",
-    name: "한지민",
-    status: "설명 필요",
-    birthDate: "1988-02-20",
-    scheduledDate: "2023-10-14",
-  },
-  {
-    id: "00015",
-    name: "이도현",
-    status: "설명 완료",
-    birthDate: "1995-03-25",
-    scheduledDate: "2023-10-15",
-  },
-];
+import { PatientRecord } from "../../types/types";
+import { Model } from "../../constants/Enums";
 
 const SafeContainer = styled.SafeAreaView`
   flex: 1;
@@ -125,6 +19,8 @@ const Header = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+
+const HeaderBtn = styled.TouchableOpacity``;
 
 const Title = styled.Text`
   font-size: 26px;
@@ -206,60 +102,163 @@ const FloatingButton = styled.TouchableOpacity`
   elevation: 10;
 `;
 
-const renderPatientItem = ({
-  item,
-}: {
-  item: {
-    id: string;
-    name: string;
-    status: string;
-    birthDate: string;
-    scheduledDate: string;
-  };
-}) => (
-  <PatientItem>
-    <PatientItemUpperView>
-      <PatientName>{item.name}</PatientName>
-      <StatusButton completed={item.status === "설명 완료"} disabled={true}>
-        <StatusText completed={item.status === "설명 완료"}>
-          {item.status}
-        </StatusText>
-      </StatusButton>
-    </PatientItemUpperView>
-    <PatientItemBelowView>
-      <PatientInfo>{`ID: ${item.id}`}</PatientInfo>
-      <PatientInfo>{`Birth Date: ${item.birthDate}`}</PatientInfo>
-      <PatientInfo>{`Scheduled: ${item.scheduledDate}`}</PatientInfo>
-    </PatientItemBelowView>
-  </PatientItem>
-);
+const ModalContainer = styled.TouchableOpacity`
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.View`
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  align-items: center;
+`;
+
+const ModalButton = styled.TouchableOpacity`
+  margin-top: ${(props: { marginTop?: number }) => props.marginTop || 0}px;
+`;
+
+const ModalButtonText = styled.Text`
+  font-size: 18px;
+`;
 
 interface Props {
   isLoaded: boolean;
-  navigateToChatScreen: () => void;
+  patients: PatientRecord[];
+  modalVisible: boolean;
+  isRefreshing: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  clickChatBtn: () => void;
+  actLogout: () => void;
+  navigateToRecorderScreen: (idx: number, arrIdx: number) => void;
+  actSetModalVisible: (state: boolean) => void;
+  clickModelName: (modelName: string) => void;
+  preloadHome: () => void;
 }
 
 export default function HomePresenter({
   isLoaded,
-  navigateToChatScreen,
+  patients,
+  modalVisible,
+  isRefreshing,
+  searchQuery,
+  setSearchQuery,
+  clickChatBtn,
+  actLogout,
+  navigateToRecorderScreen,
+  actSetModalVisible,
+  clickModelName,
+  preloadHome,
 }: Props) {
+  const renderPatientItem = ({
+    item,
+    index,
+  }: {
+    item: PatientRecord;
+    index: number;
+  }) => (
+    <TouchableWithoutFeedback
+      onPress={() => navigateToRecorderScreen(item.idx, index)}
+    >
+      <PatientItem>
+        <PatientItemUpperView>
+          <PatientName>{item.name}</PatientName>
+          <StatusButton completed={item.surgeryRecord !== ""} disabled={true}>
+            <StatusText completed={item.surgeryRecord !== ""}>
+              {item.surgeryRecord !== "" ? "설명 완료" : "설명 필요"}
+            </StatusText>
+          </StatusButton>
+        </PatientItemUpperView>
+        <PatientItemBelowView>
+          <PatientInfo>{`ID: ${item.patientId}`}</PatientInfo>
+          <PatientInfo>{`Birth Date: ${new Date(
+            item.dateOfBirth
+          ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+          <PatientInfo>{`Scheduled: ${new Date(
+            item.scheduledAt
+          ).toLocaleDateString("ko-KR")}`}</PatientInfo>
+          <PatientInfo>{`Name of Surgery: ${item.nameOfSurgery}`}</PatientInfo>
+        </PatientItemBelowView>
+      </PatientItem>
+    </TouchableWithoutFeedback>
+  );
+
   return isLoaded ? (
     <SafeContainer>
       <Header>
-        <Title>Patients</Title>
+        <HeaderBtn onPress={actLogout}>
+          <Title>Patients</Title>
+        </HeaderBtn>
       </Header>
       <SearchContainer>
         <Ionicons name="search" size={20} color="#aaa" />
-        <SearchInput placeholder="환자 검색" placeholderTextColor="#aaa" />
+        <SearchInput
+          placeholder="환자 검색"
+          placeholderTextColor="#aaa"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery ? (
+          <Ionicons
+            name="close-circle"
+            size={20}
+            color="#aaa"
+            onPress={() => setSearchQuery("")}
+          />
+        ) : null}
       </SearchContainer>
       <FlatList
         data={patients}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.idx.toString()}
+        refreshing={isRefreshing}
         renderItem={renderPatientItem}
+        onRefresh={preloadHome}
       />
-      <FloatingButton onPress={navigateToChatScreen}>
+      <FloatingButton onPress={clickChatBtn}>
         <Ionicons name="chatbubble-ellipses" size={28} color="#fff" />
       </FloatingButton>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => actSetModalVisible(false)}
+      >
+        <ModalContainer onPress={() => actSetModalVisible(false)}>
+          <ModalContent>
+            <ModalButton onPress={() => clickModelName(Model.ModelA)}>
+              <ModalButtonText>{Model.ModelA}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelB)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelB}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelC)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelC}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelD)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelD}</ModalButtonText>
+            </ModalButton>
+            <ModalButton
+              onPress={() => clickModelName(Model.ModelE)}
+              marginTop={10}
+            >
+              <ModalButtonText>{Model.ModelE}</ModalButtonText>
+            </ModalButton>
+          </ModalContent>
+        </ModalContainer>
+      </Modal>
     </SafeContainer>
   ) : (
     <Loader />

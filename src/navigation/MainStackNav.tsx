@@ -5,6 +5,8 @@ import { RootStackParamList } from "../types/types";
 
 import HomeScreen from "../screens/HomeScreen";
 import ChatScreen from "../screens/ChatScreen";
+import DocumentScreen from "../screens/DocumentScreen";
+import RecorderScreen from "../screens/RecorderScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -17,6 +19,8 @@ export default function MainStackNav() {
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Document" component={DocumentScreen} />
+      <Stack.Screen name="Recorder" component={RecorderScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
   );
